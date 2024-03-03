@@ -1,10 +1,13 @@
 #include <iostream>
 #include <vector>
-#include <exception>
+#include <type_traits>
 
 template<typename T>
-T average(const std::vector<T> &vec)
-{
+T average(const std::vector<T> &vec){
+    if(vec.empty()) return T();
+
+    static_assert( std::is_same<T, int>::value || std::is_same<T, float>::value || std::is_same<T, double>::value, "False type" );
+
     T avg = 0;
     if(vec.size())
     {
@@ -17,11 +20,16 @@ T average(const std::vector<T> &vec)
 }
 
 template<typename T>
-void input(std::vector<T> &vec)
-{
+void input(std::vector<T> &vec){
+
+    static_assert( std::is_same<T, int>::value || std::is_same<T, float>::value || std::is_same<T, double>::value, "False type" );
+
+    std::cout << "Fill the vector<" << typeid(T).name()  << "> with values:" << std::endl;
+
     T tmp;
     for(int i = 0; i < vec.size(); ++i)
     {
+        std::cout << "[" << i << "]: ";
         std::cin >> tmp;
         vec[i] = tmp;
     }
@@ -36,13 +44,13 @@ int main(int, char**){
     std::vector<float> float_vec(8);
 
     input(int_vec);
-    std::cout << average(int_vec) << std::endl;
+    std::cout << "Average: " << average(int_vec) << std::endl;
 
     input(double_vec);
-    std::cout << average(double_vec) << std::endl;
+    std::cout << "Average: " << average(double_vec) << std::endl;
 
     input(float_vec);
-    std::cout << average(float_vec) << std::endl;
+    std::cout<< "Average: " << average(float_vec) << std::endl;
 
     return 0;
 }
